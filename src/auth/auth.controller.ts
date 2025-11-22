@@ -25,7 +25,7 @@ import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { GetUser } from './decorators/get-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('api/v1/authentication')
+@Controller('api/v2/authentication')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   // Redirect to Google

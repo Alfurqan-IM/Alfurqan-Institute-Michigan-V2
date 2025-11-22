@@ -21,7 +21,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { UploadConfig } from 'src/utils/cloudinary.config';
 
-@Controller('api/v1/banners')
+@Controller('api/v2/banners')
 export class BannersController {
   constructor(private bannerService: BannerService) {}
   //create banners

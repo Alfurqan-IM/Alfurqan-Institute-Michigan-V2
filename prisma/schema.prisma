@@ -46,19 +46,20 @@ model enquiries {
 }
 
 model events {
-  event_id      Int            @id @default(autoincrement())
-  title         String         @db.VarChar(255)
-  image_url     String         @default("/uploads/example.jpeg") @db.VarChar(500)
-  description   String?        @db.Text
-  event_date    DateTime?      @db.DateTime(0)
-  location      String?        @db.VarChar(255)
-  organizer     String?        @db.VarChar(255)
-  contact_email String?        @db.VarChar(255)
-  contact_phone String?        @db.VarChar(20)
-  event_url     String         @default("https://donorbox.org/events") @db.VarChar(500)
-  status        events_status? @default(upcoming)
-  createdAt     DateTime?      @default(now()) @db.Timestamp(0)
-  updatedAt     DateTime?      @default(now()) @db.Timestamp(0)
+  event_id        Int            @id @default(autoincrement())
+  title           String         @db.VarChar(255)
+  image_url       String         @default("/uploads/example.jpeg") @db.VarChar(500)
+  image_public_id String?        @db.VarChar(255)
+  description     String?        @db.Text
+  event_date      DateTime?      @db.DateTime(0)
+  location        String?        @db.VarChar(255)
+  organizer       String?        @db.VarChar(255)
+  contact_email   String?        @db.VarChar(255)
+  contact_phone   String?        @db.VarChar(20)
+  event_url       String         @default("https://donorbox.org/events") @db.VarChar(500)
+  status          events_status? @default(upcoming)
+  createdAt       DateTime?      @default(now()) @db.Timestamp(0)
+  updatedAt       DateTime?      @default(now()) @db.Timestamp(0)
 }
 
 model feedbackcomplaints {

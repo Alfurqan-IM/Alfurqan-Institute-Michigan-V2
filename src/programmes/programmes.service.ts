@@ -97,7 +97,6 @@ export class ProgrammesService {
     programmeId: number,
     files: Express.Multer.File[],
   ) {
-    
     if (!files || files.length === 0) {
       throw new BadRequestException('Please upload at least one image');
     }
@@ -161,5 +160,101 @@ export class ProgrammesService {
     const validUploadedImages = uploadedImages.filter(Boolean);
 
     return { images: validUploadedImages };
+  }
+
+  //remove programme
+  async removeProgramme(programmeId: number) {
+    // 1 — check if programme exists
+    const programme = await this.prisma.programmes.findUnique({
+      where: { programme_id: programmeId },
+      include: { programmesimages: true, programmeoutcomes: true },
+    });
+
+    if (!programme) {
+      throw new NotFoundException(`No programme found with id ${programmeId}`);
+    }
+
+    // 2 — delete programme images first (if using Cloudinary, also delete from cloud)
+    if (programme.programmesimages.length) {
+      for (const img of programme.programmesimages) {
+        if (img.image0_public_id)
+          await cloudinary.uploader.destroy(img.image0_public_id);
+        if (img.image1_public_id)
+          await cloudinary.uploader.destroy(img.image1_public_id);
+        if (img.image2_public_id)
+          await cloudinary.uploader.destroy(img.image2_public_id);
+      }
+      await this.prisma.programmesimages.deleteMany({
+        where: { img_id: programmeId },
+      });
+    }
+
+    // 3 — delete programme outcomes
+    await this.prisma.programmeoutcomes.deleteMany({
+      where: { outcome_id: programmeId },
+    });
+
+    // 4 — delete the main programme
+    await this.prisma.programmes.delete({
+      where: { programme_id: programmeId },
+    });
+
+    return { msg: `Programme with id ${programmeId} deleted successfully` };
+  }
+
+  // Get all programmes with pagination and optional title filter
+  async getAllProgrammes(query: any) {
+    const { title, page = 1, limit = 6 } = query;
+
+    const filters: any = {};
+    if (title) {
+      filters.title = {
+        contains: title,
+      };
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const totalProgrammes = await this.prisma.programmes.count({
+      where: filters,
+    });
+
+    const programmes = await this.prisma.programmes.findMany({
+      where: filters,
+      skip,
+      take: Number(limit),
+      include: {
+        programmesimages: true,
+        programmeoutcomes: true,
+      },
+    });
+
+    const numOfPages = Math.ceil(totalProgrammes / Number(limit));
+
+    return {
+      programmes,
+      numOfPages,
+      totalProgrammes,
+      currentCount: programmes.length,
+    };
+  }
+
+  // Get single programme by ID
+  async getSingleProgramme(programmeId: number) {
+    const programme = await this.prisma.programmes.findUnique({
+      where: { programme_id: programmeId },
+      include: {
+        programmesimages: true,
+        programmeoutcomes: true,
+      },
+    });
+
+    if (!programme) {
+      throw new NotFoundException(
+        `There is no programme with an id of ${programmeId}`,
+      );
+    }
+
+    return programme;
   }
 }

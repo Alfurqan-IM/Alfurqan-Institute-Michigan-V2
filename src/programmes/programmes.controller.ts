@@ -1,10 +1,13 @@
 import {
   Body,
   Controller,
+  Delete,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -64,5 +67,25 @@ export class ProgrammesController {
     @UploadedFiles() files: Express.Multer.File[], // notice the array
   ) {
     return this.programmesService.uploadProgrammeImages(programmeId, files);
+  }
+
+  //remove programme
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  @Delete(':programme_id')
+  async deleteProgramme(
+    @Param('programme_id', ParseIntPipe) programmeId: number,
+  ) {
+    return this.programmesService.removeProgramme(programmeId);
+  }
+  // get all programmes
+  @Get()
+  getAllProgrammes(@Query() query: any) {
+    return this.programmesService.getAllProgrammes(query);
+  }
+  // get single programme
+  @Get(':programme_id')
+  getSingleProgramme(@Param('programme_id', ParseIntPipe) programmeId: number) {
+    return this.programmesService.getSingleProgramme(programmeId);
   }
 }

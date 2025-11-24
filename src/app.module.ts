@@ -12,7 +12,6 @@ import { FeedbacksModule } from './feedbacks/feedbacks.module';
 import { DonationsModule } from './donations/donations.module';
 import { RegisterationsModule } from './registerations/registerations.module';
 import { EnquiriesModule } from './enquiries/enquiries.module';
-import { ProductsModule } from './products/products.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { MailModule } from './mail/mail.module';
 import { CommonModule } from './common/common.module';
@@ -40,7 +39,6 @@ import { ConfigModule } from '@nestjs/config';
     DonationsModule,
     RegisterationsModule,
     EnquiriesModule,
-    ProductsModule,
     PrismaModule,
     MailModule,
     CommonModule,

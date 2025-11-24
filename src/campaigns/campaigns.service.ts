@@ -1,11 +1,18 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateCampaignDto, UpdateCampaignDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import cloudinary from 'src/utils/cloudinary.config';
 import * as fs from 'fs';
+import { firstValueFrom } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class CampaignsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly httpService: HttpService,
+    private config: ConfigService,
+  ) {}
   //Get all campaign
   async getAllCampaign(page = 1, limit = 5) {
     const totalCampaign = await this.prisma.banner.count();
@@ -120,5 +127,50 @@ export class CampaignsService {
       },
       campaign: updatedcampaign,
     };
+  }
+  // get all campaigns from Donorbox
+  async getAllCampaignsDonor(query: any) {
+    const email = this.config.get<string>('EMAIL') ?? '';
+    const apiKey = this.config.get<string>('DONOR_API_KEY') ?? '';
+    if (!apiKey) {
+      throw new InternalServerErrorException(
+        'API key is missing or incorrect. Please check your environment variables.',
+      );
+    }
+
+    const { page = 1, limit = 5, id, name } = query;
+
+    let donorboxApiUrl = `https://donorbox.org/api/v1/campaigns?page=${Number(
+      page,
+    )}&per_page=${Number(limit)}`;
+
+    if (id) donorboxApiUrl += `&id=${Number(id)}`;
+    if (name) donorboxApiUrl += `&name=${encodeURIComponent(name)}`;
+
+    try {
+      const response = await firstValueFrom(
+        this.httpService.get(donorboxApiUrl, {
+          auth: {
+            username: email,
+            password: apiKey,
+          },
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }),
+      );
+
+      // Filter campaigns with goal amount only
+      const campaignsOnly = response.data.filter((c) => c.goal_amt !== null);
+
+      return { campaigns: campaignsOnly };
+    } catch (error) {
+      console.error('Error fetching campaigns:', error.message);
+
+      throw new HttpException(
+        error.response?.data || 'Failed to fetch campaigns',
+        error.response?.status || 500,
+      );
+    }
   }
 }

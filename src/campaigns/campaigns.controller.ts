@@ -67,4 +67,10 @@ export class CampaignsController {
   ) {
     return this.campaignsService.uploadCampaignImg(campaignId, file);
   }
+
+  // GET donorbox campaigns
+  @Get('donorCampaigns')
+  async getAllCampaignsDonor(@Query() query: any) {
+    return this.campaignsService.getAllCampaignsDonor(query);
+  }
 }

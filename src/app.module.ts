@@ -17,8 +17,8 @@ import { MailModule } from './mail/mail.module';
 import { CommonModule } from './common/common.module';
 import { AdminModule } from './admin/admin.module';
 import { ConfigModule } from '@nestjs/config';
-
-
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,6 +28,12 @@ import { ConfigModule } from '@nestjs/config';
         '.env', // fallback
       ],
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60, // time window
+        limit: 50, // max requests per minute per IP
+      },
+    ]),
     AuthModule,
     BannersModule,
     CampaignsModule,
@@ -45,6 +51,12 @@ import { ConfigModule } from '@nestjs/config';
     AdminModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

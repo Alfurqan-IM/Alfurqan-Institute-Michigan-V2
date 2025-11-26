@@ -20,14 +20,14 @@ import { CreateEnquiriesDto, UpdateEnquiriesDto } from './dto';
 export class EnquiriesController {
   constructor(private readonly enquiriesService: EnquiriesService) {}
   // get all enq
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Get()
   async getAllEnq(@Query() query: any) {
     return this.enquiriesService.getAllEnquiries(query);
   }
 
   //create ENQ
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
   @Post()
   createEnq(@Body() data: CreateEnquiriesDto) {
     return this.enquiriesService.createEnq(data);

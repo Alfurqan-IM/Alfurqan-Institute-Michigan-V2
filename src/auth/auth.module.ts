@@ -15,11 +15,11 @@ import { TwitterStrategy } from './strategies/twitter.strategy';
   controllers: [AuthController],
   providers: [
     AuthService,
-    FacebookStrategy,
+    //FacebookStrategy,
     GoogleStrategy,
-    GithubStrategy,
+    //GithubStrategy,
     LocalStrategy,
-    TwitterStrategy
+    //TwitterStrategy
   ],
 })
 export class AuthModule {}

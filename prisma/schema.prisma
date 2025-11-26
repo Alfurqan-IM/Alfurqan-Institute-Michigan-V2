@@ -46,19 +46,20 @@ model enquiries {
 }
 
 model events {
-  event_id      Int            @id @default(autoincrement())
-  title         String         @db.VarChar(255)
-  image_url     String         @default("/uploads/example.jpeg") @db.VarChar(500)
-  description   String?        @db.Text
-  event_date    DateTime?      @db.DateTime(0)
-  location      String?        @db.VarChar(255)
-  organizer     String?        @db.VarChar(255)
-  contact_email String?        @db.VarChar(255)
-  contact_phone String?        @db.VarChar(20)
-  event_url     String         @default("https://donorbox.org/events") @db.VarChar(500)
-  status        events_status? @default(upcoming)
-  createdAt     DateTime?      @default(now()) @db.Timestamp(0)
-  updatedAt     DateTime?      @default(now()) @db.Timestamp(0)
+  event_id        Int            @id @default(autoincrement())
+  title           String         @db.VarChar(255)
+  image_url       String         @default("/uploads/example.jpeg") @db.VarChar(500)
+  image_public_id String?        @db.VarChar(255)
+  description     String?        @db.Text
+  event_date      DateTime?      @db.DateTime(0)
+  location        String?        @db.VarChar(255)
+  organizer       String?        @db.VarChar(255)
+  contact_email   String?        @db.VarChar(255)
+  contact_phone   String?        @db.VarChar(20)
+  event_url       String         @default("https://donorbox.org/events") @db.VarChar(500)
+  status          events_status? @default(upcoming)
+  createdAt       DateTime?      @default(now()) @db.Timestamp(0)
+  updatedAt       DateTime?      @default(now()) @db.Timestamp(0)
 }
 
 model feedbackcomplaints {
@@ -77,7 +78,7 @@ model programme_reg {
   reg_id           Int                            @id @default(autoincrement())
   programme_id     Int
   user_id          Int
-  programme        programme_reg_programme
+  programme        String?                        @db.VarChar(255)
   category         programme_reg_category
   discovery_method programme_reg_discovery_method
   createdAt        DateTime?                      @default(now()) @db.Timestamp(0)
@@ -188,16 +189,20 @@ model users {
   updatedAt              DateTime?            @default(now()) @db.DateTime(0)
   feedbackcomplaints     feedbackcomplaints[]
   programme_reg          programme_reg[]
+  socialaccount          socialaccount[]
   token                  token[]
 }
 
-enum programme_reg_programme {
-  Ta_afiz_Alquran         @map("Ta-afiz Alquran")
-  Arabic_Language_studies @map("Arabic Language studies")
-  Vocational_Training     @map("Vocational Training")
-  Islamic_studies         @map("Islamic studies")
-  Islamic_Conference      @map("Islamic Conference")
-  Free_Iftar_Meal         @map("Free Iftar Meal")
+model socialaccount {
+  id         Int       @id @default(autoincrement())
+  provider   String    @db.VarChar(255)
+  providerId String    @db.VarChar(255)
+  userId     Int
+  createdAt  DateTime? @default(now()) @db.DateTime(0)
+  users      users     @relation(fields: [userId], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user")
+
+  @@unique([provider, providerId], map: "unique_provider_providerId")
+  @@index([userId], map: "fk_user")
 }
 
 enum enquiries_status {

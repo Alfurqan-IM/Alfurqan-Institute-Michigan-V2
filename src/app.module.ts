@@ -12,13 +12,13 @@ import { FeedbacksModule } from './feedbacks/feedbacks.module';
 import { DonationsModule } from './donations/donations.module';
 import { RegisterationsModule } from './registerations/registerations.module';
 import { EnquiriesModule } from './enquiries/enquiries.module';
-import { ProductsModule } from './products/products.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { MailModule } from './mail/mail.module';
 import { CommonModule } from './common/common.module';
 import { AdminModule } from './admin/admin.module';
 import { ConfigModule } from '@nestjs/config';
-
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,6 +28,12 @@ import { ConfigModule } from '@nestjs/config';
         '.env', // fallback
       ],
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60, // time window
+        limit: 50, // max requests per minute per IP
+      },
+    ]),
     AuthModule,
     BannersModule,
     CampaignsModule,
@@ -39,13 +45,18 @@ import { ConfigModule } from '@nestjs/config';
     DonationsModule,
     RegisterationsModule,
     EnquiriesModule,
-    ProductsModule,
     PrismaModule,
     MailModule,
     CommonModule,
     AdminModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

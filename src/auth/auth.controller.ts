@@ -49,51 +49,51 @@ export class AuthController {
 
   // Twitter
   // STEP 1: Redirect user to Twitter OAuth page
-  @Get('twitter')
-  @UseGuards(AuthGuard('twitter'))
-  async twitterLogin() {
-    // Passport handles redirect
-  }
+  // @Get('twitter')
+  // @UseGuards(AuthGuard('twitter'))
+  // async twitterLogin() {
+  //   // Passport handles redirect
+  // }
 
   // STEP 2: Twitter sends user back to callback URL
-  @Get('twitter/callback')
-  @UseGuards(AuthGuard('twitter'))
-  async twitterCallback(@Req() req, @Res() res: Response) {
-    console.log(req.user);
-    const { profile } = req.user;
-    return this.authService.socialLogin(profile, req, res);
-  }
+  // @Get('twitter/callback')
+  // @UseGuards(AuthGuard('twitter'))
+  // async twitterCallback(@Req() req, @Res() res: Response) {
+  //   console.log(req.user);
+  //   const { profile } = req.user;
+  //   return this.authService.socialLogin(profile, req, res);
+  // }
 
   // GitHub
-  @Get('github')
-  @UseGuards(AuthGuard('github'))
-  githubAuth() {}
+  // @Get('github')
+  // @UseGuards(AuthGuard('github'))
+  // githubAuth() {}
 
-  @Get('github/callback')
-  @UseGuards(AuthGuard('github'))
-  async githubAuthRedirect(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    //console.log(req.user);
-    const profile = req.user as any;
-    return this.authService.socialLogin(profile, req, res);
-  }
+  // @Get('github/callback')
+  // @UseGuards(AuthGuard('github'))
+  // async githubAuthRedirect(
+  //   @Req() req: Request,
+  //   @Res({ passthrough: true }) res: Response,
+  // ) {
+  //   //console.log(req.user);
+  //   const profile = req.user as any;
+  //   return this.authService.socialLogin(profile, req, res);
+  // }
 
   // Facebook
-  @Get('facebook')
-  @UseGuards(AuthGuard('facebook'))
-  facebookAuth() {}
+  // @Get('facebook')
+  // @UseGuards(AuthGuard('facebook'))
+  // facebookAuth() {}
 
-  @Get('facebook/callback')
-  @UseGuards(AuthGuard('facebook'))
-  async facebookAuthRedirect(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const profile = req.user as any;
-    return this.authService.socialLogin(profile, req, res);
-  }
+  // @Get('facebook/callback')
+  // @UseGuards(AuthGuard('facebook'))
+  // async facebookAuthRedirect(
+  //   @Req() req: Request,
+  //   @Res({ passthrough: true }) res: Response,
+  // ) {
+  //   const profile = req.user as any;
+  //   return this.authService.socialLogin(profile, req, res);
+  // }
   /**
    * User login route
    * Accepts email and password from the request body

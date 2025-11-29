@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  # api:
+  #   build: .
+  #   container_name: aim
+  #   ports:
+  #     - "3002:3001"
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     - /app/node_modules
+  #   command: npm run start:dev
+
+  db:
+    image: mysql:8.1
+    container_name: aim-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: alfurqan_institute_michigan
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: alfurqan
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

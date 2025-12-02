@@ -365,18 +365,16 @@ export class AuthService {
     });
 
     // 7️⃣ Send verification email
-    // const origin =
-    //   process.env.FRONTEND_URL ||
-    //   'https://alfurqaninstitute.onrender.com/api/v1';
-    const origin = 'http://localhost:3001';
-    // await this.mailservice.sendVerificationEmail({
-    //   email: user.email,
-    //   token: user.verificationString,
-    //   firstName: user.first_name,
-    //   lastName: user.last_name,
-    //   origin,
-    //   // origin: this.configService.get('APP_ORIGIN'),
-    // });
+    const origin = process.env.STAGING_URL || 'http://localhost:3000';
+    //const origin = 'http://localhost:3001';
+    await this.mailservice.sendVerificationEmail({
+      email: user.email,
+      token: user.verificationString,
+      firstName: user.first_name,
+      lastName: user.last_name,
+      origin,
+      // origin: this.configService.get('APP_ORIGIN'),
+    });
 
     return {
       msg: 'Please check your email to complete your registration',
@@ -445,17 +443,15 @@ export class AuthService {
         passwordExpirationDate: expires,
       },
     });
-    // const origin =
-    //   process.env.FRONTEND_URL ||
-    //   'https://alfurqaninstitute.onrender.com/api/v1';
-    const origin = 'http://localhost:3001';
-    // await this.mailservice.sendPasswordResetEmail({
-    //   email,
-    //   token,
-    //   firstName: user.first_name,
-    //   lastName: user.last_name,
-    //   origin,
-    // });
+    const origin = process.env.STAGING_URL || 'http://localhost:3000';
+    //const origin = 'http://localhost:3000';
+    await this.mailservice.sendPasswordResetEmail({
+      email,
+      token,
+      firstName: user.first_name,
+      lastName: user.last_name,
+      origin,
+    });
 
     return { msg: 'Password reset link sent to email', token };
   }

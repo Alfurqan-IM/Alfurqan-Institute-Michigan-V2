@@ -5,9 +5,9 @@ import moment from 'moment';
 const mailGenerator = new Mailgen({
   theme: 'default',
   product: {
-    name: 'AlFurqan Institute Michigan',
-    link: '#',
-    logo: 'https://res.cloudinary.com/dtrdvz70q/image/upload/v1733324658/Alfurqan%20Institue%20Michigan/alfuraqan_logo_2.jpg',
+    name: 'AlFurqan International',
+    link: 'alfurqaninternational.org',
+    logo: 'https://res.cloudinary.com/dtrdvz70q/image/upload/v1739828532/AIM%20Event%27s%20Images/tmp-2-1739828526573_hu8ipf.png',
     logoHeight: '120px',
     copyright: `© ${new Date().getFullYear()} AlFurqan Institute Michigan. All rights reserved.`,
   },
@@ -16,24 +16,9 @@ const mailGenerator = new Mailgen({
 // Social media icons + links
 const socialMediaLinks = [
   {
-    name: 'Facebook',
-    icon: 'https://img.icons8.com/fluency/48/facebook.png',
-    link: 'https://www.facebook.com/profile.php?id=61569614254645',
-  },
-  {
-    name: 'Twitter',
-    icon: 'https://img.icons8.com/color/48/twitter--v1.png',
-    link: 'https://x.com/AlfurqanMich?t=BhE9yvT1wPGvlTjWaMxCBw&s=09',
-  },
-  {
-    name: 'Instagram',
-    icon: 'https://img.icons8.com/color/48/instagram-new--v1.png',
-    link: 'https://www.instagram.com/alfurqanmichigan?igsh=OGlnb3U5YWloejcw',
-  },
-  {
-    name: 'WhatsApp',
-    icon: 'https://img.icons8.com/color/48/whatsapp--v1.png',
-    link: '#',
+    name: 'X',
+    icon: 'https://img.icons8.com/?size=100&id=phOKFKYpe00C&format=png&color=000000',
+    link: 'https://x.com/alfurqan_im',
   },
 ];
 
@@ -79,7 +64,7 @@ export const forgotPasswordTemplate = ({
       outro: 'This reset link will expire in 15 minutes for security reasons.',
       dictionary: {
         date: moment().format('MMMM Do YYYY'),
-        address: 'AlFurqan Institute Michigan',
+        address: 'AlFurqan International Missionary',
         handles: socialIconsHTML,
       },
     },

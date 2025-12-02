@@ -19,6 +19,7 @@ import { AdminModule } from './admin/admin.module';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { ProductsModule } from './products/products.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -49,6 +50,7 @@ import { APP_GUARD } from '@nestjs/core';
     MailModule,
     CommonModule,
     AdminModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [

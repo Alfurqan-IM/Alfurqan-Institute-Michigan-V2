@@ -14,9 +14,9 @@ export class CampaignsService {
     private config: ConfigService,
   ) {}
   //Get all campaign
-  async getAllCampaign(page = 1, limit = 5) {
-    const totalCampaign = await this.prisma.banner.count();
-    const offset = (page - 1) * limit;
+  async getAllCampaign(pages = 1, limit = 5) {
+    const totalCampaign = await this.prisma.campaigns_aim.count();
+    const offset = (pages - 1) * limit;
 
     const campaign = await this.prisma.campaigns_aim.findMany({
       skip: offset,
@@ -138,10 +138,10 @@ export class CampaignsService {
       );
     }
 
-    const { page = 1, limit = 5, id, name } = query;
+    const { pages = 1, limit = 5, id, name } = query;
 
     let donorboxApiUrl = `https://donorbox.org/api/v1/campaigns?page=${Number(
-      page,
+      pages,
     )}&per_page=${Number(limit)}`;
 
     if (id) donorboxApiUrl += `&id=${Number(id)}`;

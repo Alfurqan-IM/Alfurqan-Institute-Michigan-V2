@@ -26,9 +26,9 @@ export class EnquiriesService {
     }
 
     // --- PAGINATION ---
-    const page = Number(query.page) || 1;
+    const pages = Number(query.pages) || 1;
     const limit = Number(query.limit) || 5;
-    const skip = (page - 1) * limit;
+    const skip = (pages - 1) * limit;
 
     const totalEnq = await this.prisma.enquiries.count({
       where: filters,

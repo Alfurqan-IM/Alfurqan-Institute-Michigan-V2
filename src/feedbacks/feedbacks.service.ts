@@ -70,10 +70,10 @@ export class FeedbacksService {
   }
 
   // GET FEEDBACK FOR LOGGED-IN USER
-  async getUserFeedback(userId: number, page = 1, limit = 5, sort?: string) {
-    page = Number(page) || 1;
+  async getUserFeedback(userId: number, pages = 1, limit = 5, sort?: string) {
+    pages = Number(pages) || 1;
     limit = Number(limit) || 5;
-    const skip = (page - 1) * limit;
+    const skip = (pages - 1) * limit;
     const orderBy: Prisma.feedbackcomplaintsOrderByWithRelationInput =
       sort === 'oldest' ? { createdAt: 'asc' } : { createdAt: 'desc' };
     const feedback = await this.prisma.feedbackcomplaints.findMany({
@@ -87,10 +87,10 @@ export class FeedbacksService {
   }
 
   // GET ALL FEEDBACK (ADMIN)
-  async getAllFeedback(page = 1, limit = 5, sort?: string) {
-    page = Number(page) || 1;
+  async getAllFeedback(pages = 1, limit = 5, sort?: string) {
+    pages = Number(pages) || 1;
     limit = Number(limit) || 5;
-    const skip = (page - 1) * limit;
+    const skip = (pages - 1) * limit;
 
     const totalFeedback = await this.prisma.feedbackcomplaints.count();
 

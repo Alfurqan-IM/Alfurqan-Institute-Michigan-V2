@@ -13,9 +13,9 @@ import { Express } from 'express';
 export class BannerService {
   constructor(private prisma: PrismaService) {}
   //Get all Banners
-  async getAllBanners(page = 1, limit = 5) {
+  async getAllBanners(pages = 1, limit = 5) {
     const totalBanners = await this.prisma.banner.count();
-    const offset = (page - 1) * limit;
+    const offset = (pages - 1) * limit;
 
     const banners = await this.prisma.banner.findMany({
       skip: offset,

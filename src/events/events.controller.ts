@@ -49,9 +49,9 @@ export class EventsController {
   }
   //Get all Event
   @Get()
-  getAll(@Query('page') page?: string, @Query('limit') limit?: string) {
+  getAll(@Query('pages') pages?: string, @Query('limit') limit?: string) {
     return this.eventsService.getAllEvent(
-      Number(page) || 1,
+      Number(pages) || 1,
       Number(limit) || 5,
     );
   }

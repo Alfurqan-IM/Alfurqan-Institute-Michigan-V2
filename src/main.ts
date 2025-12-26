@@ -9,25 +9,29 @@ async function bootstrap() {
   // -------- SECURITY --------
   // Helmet
   app.use(helmet());
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    process.env.STAGING_URL,
+    process.env.PRODUCTION_URL,
+  ].filter(Boolean); // removes undefined envs
+
   app.enableCors({
     origin: (origin, callback) => {
-      if (
-        origin &&
-        (origin.startsWith('http://localhost') ||
-          origin.startsWith('http://127.0.0.1'))
-      ) {
-        callback(null, true);
-      } else if (
-        origin === undefined ||
-        origin === process.env.PRODUCTION_URL
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
+      // Allow non-browser requests (Postman, curl, server-to-server)
+      if (!origin) {
+        return callback(null, true);
       }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked: ${origin}`), false);
     },
     credentials: true,
   });
+
   // Cookie parser
   app.use(cookieParser(process.env.COOKIE_SECRET));
   //Logs

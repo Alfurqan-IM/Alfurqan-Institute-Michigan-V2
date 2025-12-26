@@ -35,12 +35,12 @@ export class FeedbacksController {
   @Roles('admin')
   @Get()
   async getAll(
-    @Query('page') page?: number,
+    @Query('pages') pages?: number,
     @Query('limit') limit?: number,
     @Query('sort') sort?: string,
   ) {
     return this.feedbackService.getAllFeedback(
-      Number(page),
+      Number(pages),
       Number(limit),
       sort,
     );
@@ -50,13 +50,13 @@ export class FeedbacksController {
   @Get('my')
   async getUserFeedback(
     @Req() req,
-    @Query('page') page?: number,
+    @Query('pages') pages?: number,
     @Query('limit') limit?: number,
     @Query('sort') sort?: string,
   ) {
     return this.feedbackService.getUserFeedback(
       req.user.user_id,
-      Number(page),
+      Number(pages),
       Number(limit),
       sort,
     );

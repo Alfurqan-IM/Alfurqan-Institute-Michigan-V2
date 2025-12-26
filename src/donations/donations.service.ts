@@ -18,6 +18,104 @@ export class DonationsService {
   // ============================================================
   //  Get Donations
   // ============================================================
+  // async getAllDonations(query: any) {
+  //   const donorEmail = this.config.get<string>('EMAIL') ?? '';
+  //   const apiKey = this.config.get<string>('DONOR_API_KEY') ?? '';
+
+  //   if (!apiKey) {
+  //     throw new InternalServerErrorException(
+  //       'API key is missing or incorrect. Check environment variables.',
+  //     );
+  //   }
+  //   const {
+  //     page = 1,
+  //     limit = 5,
+  //     email,
+  //     date_from,
+  //     date_to,
+  //     campaign_name,
+  //     campaign_id,
+  //     id,
+  //     first_name,
+  //     last_name,
+  //     donor_id,
+  //     amount_min,
+  //     amount_max,
+  //   } = query;
+  //   //console.log(query);
+  //   let url = `https://donorbox.org/api/v1/donations?page=${Number(
+  //     page,
+  //   )}&per_page=${Number(limit)}`;
+
+  //   const queryParams = {
+  //     email,
+  //     date_from,
+  //     date_to,
+  //     campaign_name,
+  //     campaign_id,
+  //     id,
+  //     first_name,
+  //     last_name,
+  //     donor_id,
+  //   };
+
+  //   for (const [key, value] of Object.entries(queryParams)) {
+  //     if (!value) continue;
+
+  //     switch (key) {
+  //       case 'email':
+  //       case 'date_from':
+  //       case 'date_to':
+  //       case 'campaign_name':
+  //       case 'first_name':
+  //       case 'last_name':
+  //         url += `&${key}=${encodeURIComponent(value as string)}`;
+  //         break;
+
+  //       case 'campaign_id':
+  //       case 'id':
+  //       case 'donor_id':
+  //         url += `&${key}=${Number(value)}`;
+  //         break;
+  //     }
+  //   }
+  //   // Amount filter
+  //   // if (amount_min || amount_max) {
+  //   //   url += '&amount[usd]=';
+  //   //   if (amount_min) url += `[min]=${Number(amount_min)}`;
+  //   //   if (amount_max)
+  //   //     url += `${amount_min ? '&' : ''}[max]=${Number(amount_max)}`;
+  //   // }
+
+  //   // Amount filter (Donorbox requires currency nesting)
+  //   if (amount_min || amount_max) {
+  //     const currency = 'USD'; // or make this dynamic if needed
+
+  //     if (amount_min) {
+  //       url += `&amount[${currency}][min]=${Number(amount_min)}`;
+  //     }
+
+  //     if (amount_max) {
+  //       url += `&amount[${currency}][max]=${Number(amount_max)}`;
+  //     }
+  //   }
+  //   console.log(url);
+  //   try {
+  //     const response = await firstValueFrom(
+  //       this.http.get(url, {
+  //         auth: { username: donorEmail, password: apiKey },
+  //         headers: { 'Content-Type': 'application/json' },
+  //         params: {},
+  //       }),
+  //     );
+
+  //     return { donations: response.data };
+  //   } catch (error) {
+  //     throw new InternalServerErrorException(
+  //       error.response?.data || 'Failed to fetch donations',
+  //     );
+  //   }
+  // }
   async getAllDonations(query: any) {
     const donorEmail = this.config.get<string>('EMAIL') ?? '';
     const apiKey = this.config.get<string>('DONOR_API_KEY') ?? '';
@@ -53,15 +151,22 @@ export class DonationsService {
       date_from,
       date_to,
       campaign_name,
-      campaign_id,
-      id,
       first_name,
       last_name,
+      campaign_id,
+      id,
       donor_id,
     };
 
+    // ✅ Clean & safe query param handling
     for (const [key, value] of Object.entries(queryParams)) {
-      if (!value) continue;
+      if (
+        value === undefined ||
+        value === null ||
+        (typeof value === 'string' && value.trim() === '')
+      ) {
+        continue;
+      }
 
       switch (key) {
         case 'email':
@@ -70,7 +175,7 @@ export class DonationsService {
         case 'campaign_name':
         case 'first_name':
         case 'last_name':
-          url += `&${key}=${encodeURIComponent(value as string)}`;
+          url += `&${key}=${encodeURIComponent(value.trim())}`;
           break;
 
         case 'campaign_id':
@@ -81,13 +186,42 @@ export class DonationsService {
       }
     }
 
-    // Amount filter
-    if (amount_min || amount_max) {
-      url += '&amount[usd]=';
-      if (amount_min) url += `[min]=${Number(amount_min)}`;
-      if (amount_max)
-        url += `${amount_min ? '&' : ''}[max]=${Number(amount_max)}`;
+    // ✅ Amount filter (validated & normalized)
+    const min = amount_min !== undefined ? Number(amount_min) : undefined;
+    const max = amount_max !== undefined ? Number(amount_max) : undefined;
+
+    if (
+      (min !== undefined && Number.isNaN(min)) ||
+      (max !== undefined && Number.isNaN(max))
+    ) {
+      throw new BadRequestException('Invalid amount filter');
     }
+
+    if (min !== undefined || max !== undefined) {
+      const currency = 'usd';
+
+      let finalMin = min;
+      let finalMax = max;
+
+      // 🔥 Prevent min > max crash
+      if (
+        finalMin !== undefined &&
+        finalMax !== undefined &&
+        finalMin > finalMax
+      ) {
+        [finalMin, finalMax] = [finalMax, finalMin];
+      }
+
+      if (finalMin !== undefined) {
+        url += `&amount[${currency}][min]=${finalMin}`;
+      }
+
+      if (finalMax !== undefined) {
+        url += `&amount[${currency}][max]=${finalMax}`;
+      }
+    }
+
+    console.log('Donorbox URL:', url);
 
     try {
       const response = await firstValueFrom(

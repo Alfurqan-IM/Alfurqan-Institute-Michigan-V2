@@ -17,7 +17,7 @@ export class UsersService {
   // ---------------------------------------------------
   async getAllUsers(query: any) {
     const {
-      page = 1,
+      pages = 1,
       limit = 5,
       fields,
       sort,
@@ -52,7 +52,7 @@ export class UsersService {
 
     // ---------------- PAGINATION ----------------
     const take = Number(limit);
-    const skip = (Number(page) - 1) * take;
+    const skip = (Number(pages) - 1) * take;
 
     const totalUsers = await this.prisma.users.count();
 
@@ -147,10 +147,11 @@ export class UsersService {
       where: { user_id },
       select: {
         password: false,
-        blacklisted: false,
+        blacklisted: true,
         verificationString: false,
-        isVerified: false,
+        isVerified: true,
         verified: false,
+        notification: true,
         passwordToken: false,
         passwordExpirationDate: false,
         createdAt: false,

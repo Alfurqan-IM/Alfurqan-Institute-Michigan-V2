@@ -8,9 +8,9 @@ import * as fs from 'fs';
 export class EventsService {
   constructor(private prisma: PrismaService) {}
   //Get all event
-  async getAllEvent(page = 1, limit = 5) {
+  async getAllEvent(pages = 1, limit = 5) {
     const totalEvent = await this.prisma.events.count();
-    const offset = (page - 1) * limit;
+    const offset = (pages - 1) * limit;
 
     const event = await this.prisma.events.findMany({
       skip: offset,

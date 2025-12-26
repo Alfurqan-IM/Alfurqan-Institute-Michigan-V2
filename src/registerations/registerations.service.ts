@@ -102,8 +102,8 @@ export class RegisterationsService {
     });
   }
   // get user registerations
-  async getUserRegistrations(userId: number, page = 1, limit = 5) {
-    const skip = (page - 1) * limit;
+  async getUserRegistrations(userId: number, pages = 1, limit = 5) {
+    const skip = (pages - 1) * limit;
     const total = await this.prisma.programme_reg.count({
       where: { user_id: userId },
     });
@@ -122,8 +122,8 @@ export class RegisterationsService {
     };
   }
   //get all registerations
-  async getAllRegistrations(page = 1, limit = 5, query?: any) {
-    const skip = (page - 1) * limit;
+  async getAllRegistrations(pages = 1, limit = 5, query?: any) {
+    const skip = (pages - 1) * limit;
     const filters: any = {};
 
     const fieldsToCheck = {

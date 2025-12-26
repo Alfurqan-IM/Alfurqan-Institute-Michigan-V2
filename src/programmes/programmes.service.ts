@@ -204,7 +204,7 @@ export class ProgrammesService {
 
   // Get all programmes with pagination and optional title filter
   async getAllProgrammes(query: any) {
-    const { title, page = 1, limit = 6 } = query;
+    const { title, pages = 1, limit = 6 } = query;
 
     const filters: any = {};
     if (title) {
@@ -213,7 +213,7 @@ export class ProgrammesService {
       };
     }
 
-    const skip = (Number(page) - 1) * Number(limit);
+    const skip = (Number(pages) - 1) * Number(limit);
 
     const totalProgrammes = await this.prisma.programmes.count({
       where: filters,

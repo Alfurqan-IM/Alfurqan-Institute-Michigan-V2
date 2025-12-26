@@ -20,6 +20,7 @@ import {
   programme_reg_category,
   programme_reg_discovery_method,
 } from '@prisma/client';
+import { findPackageJSON } from 'module';
 @Controller('api/v2/registerations')
 export class RegisterationsController {
   constructor(private registerationsService: RegisterationsService) {}
@@ -47,12 +48,12 @@ export class RegisterationsController {
   @Get('me')
   async getMyRegistrations(
     @Req() req,
-    @Query('page') page?: number,
+    @Query('pages') pages?: number,
     @Query('limit') limit?: number,
   ) {
     return this.registerationsService.getUserRegistrations(
       req.user.user_id,
-      page,
+      pages,
       limit,
     );
   }
@@ -71,10 +72,10 @@ export class RegisterationsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   async getAll(
-    @Query('page') page?: number,
+    @Query('pages') pages?: number,
     @Query('limit') limit?: number,
     @Query() query?: any,
   ) {
-    return this.registerationsService.getAllRegistrations(page, limit, query);
+    return this.registerationsService.getAllRegistrations(pages, limit, query);
   }
 }

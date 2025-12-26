@@ -1,16 +1,29 @@
 // src/utils/cookie.ts
 import { Response } from 'express';
+import { CookieOptions } from 'express';
+
+const isProdLike = process.env.NODE_ENV !== 'development';
+
+export const cookieOptions: CookieOptions = {
+  httpOnly: true,
+  signed: true,
+  secure: isProdLike,
+  sameSite: isProdLike ? 'none' : 'lax',
+  domain: isProdLike ? '.alfurqaninternational.org' : undefined,
+  path: '/',
+};
 
 const ACCESS_COOKIE_NAME = 'accessToken';
 const REFRESH_COOKIE_NAME = 'refreshToken';
+// export const cookieOptions = {
+//   httpOnly: true,
+//   signed: true, // uses cookie-parser secret
+//   sameSite: 'lax' as const,
+//   secure: process.env.NODE_ENV === 'production',
+//   path: '/', // cookie path
+// };
 
-export const cookieOptions = {
-  httpOnly: true,
-  signed: true, // uses cookie-parser secret
-  sameSite: 'lax' as const,
-  secure: process.env.NODE_ENV === 'production',
-  path: '/', // cookie path
-};
+// 
 
 export function attachResponseToCookie({
   res,

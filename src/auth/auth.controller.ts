@@ -44,7 +44,7 @@ export class AuthController {
     await this.authService.socialLogin(profile, req, res);
     const frontendUrl =
       process.env.STAGING_URL_P ??
-      process.env.PRODUCTION_URL ??
+      process.env.PRODUCTION_URL_P ??
       'http://localhost:3000';
     return res.redirect(`${frontendUrl}/userprofile`);
   }

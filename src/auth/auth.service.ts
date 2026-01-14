@@ -366,8 +366,8 @@ export class AuthService {
 
     // 7️⃣ Send verification email
     const origin =
-      process.env.STAGING_URL ??
-      process.env.PRODUCTION_URL ??
+      process.env.STAGING_URL_P ??
+      process.env.PRODUCTION_URL_P ??
       'http://localhost:3000';
 
     await this.mailservice.sendVerificationEmail({
@@ -446,8 +446,8 @@ export class AuthService {
       },
     });
     const origin =
-      process.env.STAGING_URL ??
-      process.env.PRODUCTION_URL ??
+      process.env.STAGING_URL_P ??
+      process.env.PRODUCTION_URL_P ??
       'http://localhost:3000';
 
     await this.mailservice.sendPasswordResetEmail({

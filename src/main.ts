@@ -15,6 +15,7 @@ async function bootstrap() {
     process.env.STAGING_URL,
     process.env.STAGING_URL_P,
     process.env.PRODUCTION_URL,
+    process.env.PRODUCTION_URL_P,
   ].filter(Boolean); // removes undefined envs
 
   app.enableCors({

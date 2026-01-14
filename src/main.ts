@@ -13,6 +13,7 @@ async function bootstrap() {
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     process.env.STAGING_URL,
+    process.env.STAGING_URL_P,
     process.env.PRODUCTION_URL,
   ].filter(Boolean); // removes undefined envs
 

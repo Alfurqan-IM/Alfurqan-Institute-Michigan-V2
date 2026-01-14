@@ -20,6 +20,11 @@ const socialMediaLinks = [
     icon: 'https://img.icons8.com/?size=100&id=phOKFKYpe00C&format=png&color=000000',
     link: 'https://x.com/alfurqan_im',
   },
+  {
+    name: 'YOUTUBE',
+    icon: 'https://img.icons8.com/?size=100&id=19318&format=png&color=000000',
+    link: 'https://www.youtube.com/channel/UCl6-EfBpbHQuOzvg_h1J85A',
+  },
 ];
 const socialIconsHTML = socialMediaLinks
   .map(
@@ -44,7 +49,7 @@ export const verifyEmailTemplate = ({
   token: string | null;
   origin: string;
 }) => {
-  const verifyEmail = `${origin}/authentication/verify-email?token=${token}&email=${email}`;
+  const verifyEmail = `${origin}/verify-account?token=${token}&email=${email}`;
   const emailContent = {
     body: {
       greeting: 'Dear',

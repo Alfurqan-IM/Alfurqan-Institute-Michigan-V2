@@ -365,15 +365,17 @@ export class AuthService {
     });
 
     // 7️⃣ Send verification email
-    const origin = process.env.STAGING_URL || 'http://localhost:3000';
-    //const origin = 'http://localhost:3001';
+    const origin =
+      process.env.STAGING_URL ??
+      process.env.PRODUCTION_URL ??
+      'http://localhost:3000';
+
     await this.mailservice.sendVerificationEmail({
       email: user.email,
       token: user.verificationString,
       firstName: user.first_name,
       lastName: user.last_name,
       origin,
-      // origin: this.configService.get('APP_ORIGIN'),
     });
 
     return {
@@ -443,8 +445,11 @@ export class AuthService {
         passwordExpirationDate: expires,
       },
     });
-    const origin = process.env.STAGING_URL || 'http://localhost:3000';
-    //const origin = 'http://localhost:3000';
+    const origin =
+      process.env.STAGING_URL ??
+      process.env.PRODUCTION_URL ??
+      'http://localhost:3000';
+
     await this.mailservice.sendPasswordResetEmail({
       email,
       token,

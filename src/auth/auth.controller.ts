@@ -40,11 +40,14 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
+    @Res() res: Response,
   ) {
     // req.user contains the object returned from GoogleStrategy.validate
     const profile = req.user as any;
-    return this.authService.socialLogin(profile, req, res);
+     await this.authService.socialLogin(profile, req, res);
+
+     const frontendUrl = process.env.PRODUCTION_URL || 'http://localhost:3000';
+     return res.redirect(`${frontendUrl}/userprofile`);
   }
 
   // Twitter

@@ -135,7 +135,7 @@ export class AuthService {
       // Or simply: do not allow local login at all unless they manually reset password
       if (!isPasswordValid) {
         throw new UnauthorizedException(
-          'This account was created with social login. Please sign in with Google or reset your password.',
+          'This account was created with google login. Please sign in with Google and reset your password.',
         );
       }
     }
@@ -159,7 +159,7 @@ export class AuthService {
     // 4️⃣ Prepare JWT payload
     const tokenUser = {
       user_id: user.user_id,
-      firsttName: user.first_name,
+      firstName: user.first_name,
       email: user.email,
       role: user.role,
       address: user.address,
@@ -193,7 +193,7 @@ export class AuthService {
     const user = tokenRec.users;
     const tokenUser = {
       user_id: user?.user_id,
-      firsttName: user?.first_name,
+      firstName: user?.first_name,
       email: user?.email,
       role: user?.role,
       address: user?.address,
@@ -295,7 +295,7 @@ export class AuthService {
     // 4. Build token payload
     const tokenUser = {
       user_id: user.user_id,
-      firsttName: user.first_name,
+      firstName: user.first_name,
       email: user.email,
       role: user.role,
       address: user.address,

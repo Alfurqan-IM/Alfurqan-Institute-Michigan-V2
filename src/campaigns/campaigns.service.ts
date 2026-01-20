@@ -1,4 +1,10 @@
-import { BadRequestException, HttpException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCampaignDto, UpdateCampaignDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import cloudinary from 'src/utils/cloudinary.config';
@@ -138,7 +144,7 @@ export class CampaignsService {
       );
     }
 
-    const { pages = 1, limit = 5, id, name } = query;
+    const { pages = 1, limit = 20, id, name } = query;
 
     let donorboxApiUrl = `https://donorbox.org/api/v1/campaigns?page=${Number(
       pages,
@@ -159,9 +165,10 @@ export class CampaignsService {
           },
         }),
       );
-
+      //console.log(response.data);
       // Filter campaigns with goal amount only
-      const campaignsOnly = response.data.filter((c) => c.goal_amt !== null);
+      //const campaignsOnly = response.data.filter((c) => c.goal_amt !== null);
+      const campaignsOnly = response.data.filter((c) => c.type === 'campaign');
 
       return { campaigns: campaignsOnly };
     } catch (error) {

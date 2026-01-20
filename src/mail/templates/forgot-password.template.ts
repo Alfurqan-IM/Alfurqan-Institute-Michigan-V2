@@ -23,9 +23,13 @@ const socialMediaLinks = [
   {
     name: 'YOUTUBE',
     icon: 'https://img.icons8.com/?size=100&id=19318&format=png&color=000000',
-    link: 'https://www.youtube.com/channel/UCl6-EfBpbHQuOzvg_h1J85A',
+    link: 'https://youtube.com/@alfurqanint_m?si=DamsLCVIIPR8wtA7',
   },
- 
+  {
+    name: 'Instagram',
+    icon: 'https://img.icons8.com/color/48/instagram-new--v1.png',
+    link: 'https://www.instagram.com/alfurqan_intm?igsh=MTluMnhhd3piZ2dvdw==',
+  },
 ];
 
 const socialIconsHTML = socialMediaLinks

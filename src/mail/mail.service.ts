@@ -7,8 +7,11 @@ import { ConfigService } from '@nestjs/config';
 export class MailService {
   //private resend = new Resend(process.env.RESEND_API_KEY);
   private resend: Resend;
+  private fromEmail: string;
   constructor(private config: ConfigService) {
     this.resend = new Resend(this.config.get<string>('RESEND_API_KEY'));
+    this.fromEmail =
+      this.config.get<string>('FROM_EMAIL') ?? 'noreply@example.com'; // safe fallback
   }
   async sendEmail(options: {
     to: string | string[];
@@ -19,7 +22,7 @@ export class MailService {
     const { to, subject, html } = options;
     try {
       const response = await this.resend.emails.send({
-        from: 'AlFurqan International <noreply@api.staging.alfurqaninternational.org>',
+        from: this.fromEmail,
         to,
         subject,
         html,
